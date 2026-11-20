@@ -6,12 +6,12 @@ import Footer from "../components/Footer.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import Header from "../components/Header.astro";
 
-type Props = CollectionEntry<"blog">["data"];
+type Props = CollectionEntry<"note">["data"];
 
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 ---
 
-<html lang={Astro.url.pathname.includes("/blog/ne/") ? "ne" : "en"}>
+<html lang={Astro.url.pathname.includes("/notes/ne/") ? "ne" : "en"}>
   <head>
     <BaseHead title={title} description={description} />
     <style>
@@ -97,48 +97,42 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
       <article>
         <!-- Cleaned Up Language Toggle Link -->
         <div class="language-toggle-container">
-          {
-            Astro.url.pathname.includes("/blog/ne/") ? (
-              <a
-                href={Astro.url.pathname.replace("/blog/ne/", "/blog/en/")}
-                class="lang-toggle-link"
-              >
-                🌐 Read in English
-              </a>
-            ) : (
-              <a
-                href={Astro.url.pathname.replace("/blog/en/", "/blog/ne/")}
-                class="lang-toggle-link"
-              >
-                🌐 नेपालीमा पढ्नुहोस् (Read in Nepali)
-              </a>
-            )
-          }
+          {Astro.url.pathname.includes("/notes/ne/") ? (
+            <a
+              href={Astro.url.pathname.replace("/notes/ne/", "/notes/en/")}
+              class="lang-toggle-link"
+            >
+              🌐 Read in English
+            </a>
+          ) : (
+            <a
+              href={Astro.url.pathname.replace("/notes/en/", "/notes/ne/")}
+              class="lang-toggle-link"
+            >
+              🌐 नेपालीमा पढ्नुहोस् (Read in Nepali)
+            </a>
+          )}
         </div>
 
         <div class="hero-row">
           <div class="title-section">
             <div class="date">
               <FormattedDate date={pubDate} />
-              {
-                updatedDate && (
-                  <div class="last-updated-on">
-                    Last updated on <FormattedDate date={updatedDate} />
-                  </div>
-                )
-              }
+              {updatedDate && (
+                <div class="last-updated-on">
+                  Last updated on <FormattedDate date={updatedDate} />
+                </div>
+              )}
             </div>
             <h1>{title}</h1>
             <hr />
           </div>
 
-          {
-            heroImage && (
-              <div class="hero-image-side">
-                <Image src={heroImage} alt="" />
-              </div>
-            )
-          }
+          {heroImage && (
+            <div class="hero-image-side">
+              <Image src={heroImage} alt="" />
+            </div>
+          )}
         </div>
 
         <div class="prose">

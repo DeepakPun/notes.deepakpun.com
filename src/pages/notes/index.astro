@@ -8,9 +8,9 @@ import Header from "../../components/Header.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
 
 // Fetch posts, filter out everything except the 'en/' folder, and sort featured first, then by date
-const posts: CollectionEntry<"blog">[] = (await getCollection("blog"))
+const notes: CollectionEntry<"note">[] = (await getCollection("note"))
   .filter((post) => post.id.startsWith("en/"))
-  .sort((a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) => {
+  .sort((a: CollectionEntry<"note">, b: CollectionEntry<"note">) => {
     if (a.data.featured && !b.data.featured) return -1;
     if (!a.data.featured && b.data.featured) return 1;
     return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
@@ -94,7 +94,9 @@ const posts: CollectionEntry<"blog">[] = (await getCollection("blog"))
         padding: 1.25rem;
         box-sizing: border-box;
         box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
       }
       ul li.featured:hover {
         transform: translateY(-2px);
@@ -151,37 +153,35 @@ const posts: CollectionEntry<"blog">[] = (await getCollection("blog"))
     <main>
       <section>
         <ul>
-          {
-            posts.map((post) => (
-              <li class:list={[{ featured: post.data.featured }]}>
-                <a href={`/blog/${post.id}/`}>
-                  {post.data.heroImage && (
-                    <div class="image-wrapper">
-                      <Image
-                        width={360}
-                        height={180}
-                        src={post.data.heroImage}
-                        alt=""
-                      />
-                    </div>
-                  )}
-                  <div class="post-details">
-                    {post.data.featured && (
-                      <span class="badge">Featured Project • Microservices</span>
-                    )}
-                    <h4 class="title">{post.data.title}</h4>
-                    <p class="date">
-                      <FormattedDate date={post.data.pubDate} />
-                    </p>
-                    {post.data.featured && post.data.description && (
-                      <p class="description">{post.data.description}</p>
-                    )}
+          {notes.map((note) => (
+            <li class:list={[{ featured: note.data.featured }]}>
+              <a href={`/notes/${note.id}/`}>
+                {note.data.heroImage && (
+                  <div class="image-wrapper">
+                    <Image
+                      width={360}
+                      height={180}
+                      src={note.data.heroImage}
+                      alt=""
+                    />
                   </div>
-                </a>
-                {!post.data.featured && <hr />}
-              </li>
-            ))
-          }
+                )}
+                <div class="post-details">
+                  {note.data.featured && (
+                    <span class="badge">Featured Project • Microservices</span>
+                  )}
+                  <h4 class="title">{note.data.title}</h4>
+                  <p class="date">
+                    <FormattedDate date={note.data.pubDate} />
+                  </p>
+                  {note.data.featured && note.data.description && (
+                    <p class="description">{note.data.description}</p>
+                  )}
+                </div>
+              </a>
+              {!note.data.featured && <hr />}
+            </li>
+          ))}
         </ul>
       </section>
     </main>
