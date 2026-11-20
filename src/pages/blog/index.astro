@@ -7,13 +7,14 @@ import FormattedDate from "../../components/FormattedDate.astro";
 import Header from "../../components/Header.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
 
-// Fetch posts, filter out everything except the 'en/' folder, and sort by date
+// Fetch posts, filter out everything except the 'en/' folder, and sort featured first, then by date
 const posts: CollectionEntry<"blog">[] = (await getCollection("blog"))
   .filter((post) => post.id.startsWith("en/"))
-  .sort(
-    (a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) =>
-      b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-  );
+  .sort((a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) => {
+    if (a.data.featured && !b.data.featured) return -1;
+    if (!a.data.featured && b.data.featured) return 1;
+    return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+  });
 ---
 
 <!doctype html>
@@ -36,6 +37,7 @@ const posts: CollectionEntry<"blog">[] = (await getCollection("blog"))
         max-width: 100%;
         margin: 0 auto;
         padding: 0 1rem;
+        box-sizing: border-box;
       }
       ul {
         display: flex;
@@ -59,7 +61,7 @@ const posts: CollectionEntry<"blog">[] = (await getCollection("blog"))
       /* Limits the image size and makes it uniform */
       .image-wrapper {
         flex-shrink: 0;
-        width: 180px; /* Adjust this value to make the image smaller or larger */
+        width: 180px;
         height: auto;
       }
       .image-wrapper img {
@@ -84,6 +86,44 @@ const posts: CollectionEntry<"blog">[] = (await getCollection("blog"))
         color: rgb(var(--gray));
       }
 
+      /* --- Highlighted Featured Card Styling (Bluish Theme) --- */
+      ul li.featured {
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        border: 2px solid #2563eb;
+        border-radius: 12px;
+        padding: 1.25rem;
+        box-sizing: border-box;
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      ul li.featured:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(37, 99, 235, 0.18);
+      }
+      .badge {
+        align-self: flex-start;
+        background-color: #1d4ed8;
+        color: #ffffff;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 0.25rem 0.65rem;
+        border-radius: 6px;
+        margin-bottom: 0.35rem;
+      }
+      ul li.featured .title {
+        color: #0f172a;
+      }
+      ul li.featured a:hover .title {
+        color: #1d4ed8;
+      }
+      .description {
+        margin: 0.35rem 0 0;
+        color: #334155;
+        font-size: 0.95rem;
+        line-height: 1.45;
+      }
       /* Hover States */
       ul li a:hover h4,
       ul li a:hover .date {
@@ -113,7 +153,7 @@ const posts: CollectionEntry<"blog">[] = (await getCollection("blog"))
         <ul>
           {
             posts.map((post) => (
-              <li>
+              <li class:list={[{ featured: post.data.featured }]}>
                 <a href={`/blog/${post.id}/`}>
                   {post.data.heroImage && (
                     <div class="image-wrapper">
@@ -126,13 +166,19 @@ const posts: CollectionEntry<"blog">[] = (await getCollection("blog"))
                     </div>
                   )}
                   <div class="post-details">
+                    {post.data.featured && (
+                      <span class="badge">Featured Project • Microservices</span>
+                    )}
                     <h4 class="title">{post.data.title}</h4>
                     <p class="date">
                       <FormattedDate date={post.data.pubDate} />
                     </p>
+                    {post.data.featured && post.data.description && (
+                      <p class="description">{post.data.description}</p>
+                    )}
                   </div>
                 </a>
-                <hr />
+                {!post.data.featured && <hr />}
               </li>
             ))
           }

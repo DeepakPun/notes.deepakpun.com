@@ -1,6 +1,7 @@
 ---
 title: "Building the YelpCamp Monolith: Full-Stack Foundations and Scaling Limits"
 description: "A deep dive into building a full-stack monolithic YelpCamp application, what it teaches about web architecture, and why large-scale apps require a different approach."
+isPublished: true
 pubDate: 2026-11-07
 heroImage: "@/assets/default.jpg"
 # heroImage: "../../../assets/default.jpg"
