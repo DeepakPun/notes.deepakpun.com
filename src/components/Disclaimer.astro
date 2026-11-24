@@ -1,0 +1,106 @@
+---
+// Disclaimer
+
+interface Props {
+  lang?: "en" | "ne";
+  defaultOpen?: boolean;
+}
+
+const { lang = "en", defaultOpen = true } = Astro.props;
+
+const content = {
+  en: {
+    badge: "⚠️ LAB_NOTES // DISCLAIMER (Click to toggle)",
+    expTitle: "Personal Experiments, Not Tutorials:",
+    expBody:
+      "Everything published here documents my personal hands-on experiments, homelab setups, and troubleshooting logs—not step-by-step production guides.",
+    billTitle: "Cloud Billing Warning:",
+    billBody:
+      "Replicating any steps involving cloud infrastructure (such as provisioning AWS EC2/S3/Route53 or DigitalOcean Droplets) will incur real billing charges unless you actively tear down and delete those resources afterward.",
+  },
+  ne: {
+    badge: "⚠️ प्रयोगात्मक नोट // अस्वीकरण (लुकाउन/हेर्न क्लिक गर्नुहोस्)",
+    expTitle: "व्यक्तिगत प्रयोगहरू, ट्युटोरियल होइनन्:",
+    expBody:
+      "यहाँ प्रकाशित सामग्रीहरू मेरा व्यक्तिगत प्राविधिक प्रयोग, होमल्याब सेटअप र समस्या समाधानका अनुभवहरू मात्र हुन्—यिनीहरू पूर्ण प्रोडक्सन गाइड होइनन्।",
+    billTitle: "क्लाउड शुल्क सम्बन्धी चेतावनी:",
+    billBody:
+      "AWS (EC2/S3/Route53) वा DigitalOcean Droplet जस्ता क्लाउड सेवाहरू प्रयोग गर्दा वास्तविक शुल्क (Billing Charges) लाग्न सक्छ। प्रयोग गरिसकेपछि ती रिसोर्सहरू अनिवार्य रूपमा बन्द वा डिलिट (Delete/Destroy) गर्नुहोला।",
+  },
+};
+
+const t = content[lang] ?? content.en;
+---
+
+<details open={defaultOpen} class="disclaimer-banner">
+  <summary class="disclaimer-header">
+    <span>{t.badge}</span>
+    <span class="chevron" aria-hidden="true">
+      ▾
+    </span>
+  </summary>
+
+  <div class="disclaimer-body">
+    <p>
+      <strong>{t.expTitle}</strong> {t.expBody}
+    </p>
+    <p>
+      <strong>{t.billTitle}</strong> {t.billBody}
+    </p>
+  </div>
+</details>
+
+<style>
+  .disclaimer-banner {
+    margin: 1.5rem 0;
+    padding: 0.85rem 1.25rem;
+    border-left: 4px solid #d97706;
+    background-color: rgba(245, 158, 11, 0.1);
+    border-radius: 6px;
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  .disclaimer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    list-style: none; /* Hides default browser arrow */
+    font-family:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #b45309;
+    user-select: none;
+  }
+
+  /* Hide default Safari/Chrome marker */
+  .disclaimer-header::-webkit-details-marker {
+    display: none;
+  }
+
+  .chevron {
+    transition: transform 0.2s ease;
+    font-size: 1rem;
+  }
+
+  details[open] .chevron {
+    transform: rotate(180deg);
+  }
+
+  .disclaimer-body {
+    margin-top: 0.6rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(217, 119, 6, 0.2);
+  }
+
+  .disclaimer-body p {
+    margin: 0.4rem 0;
+  }
+
+  .disclaimer-body p:last-child {
+    margin-bottom: 0;
+  }
+</style>

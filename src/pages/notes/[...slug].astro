@@ -1,6 +1,7 @@
 ---
 import { type CollectionEntry, getCollection, render } from "astro:content";
 import BlogPost from "../../layouts/BlogPost.astro";
+import Disclaimer from "@/components/Disclaimer.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("note");
@@ -13,8 +14,10 @@ type Props = CollectionEntry<"note">;
 
 const note = Astro.props;
 const { Content } = await render(note);
+const lang = note.id.startsWith("ne/") ? "ne" : "en";
 ---
 
 <BlogPost {...note.data}>
+  <Disclaimer lang={lang} />
   <Content />
 </BlogPost>
